@@ -14,8 +14,79 @@
             background-size: cover;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
+    <canvas id="dvdCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('dvdCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Speed and size proportional to screen size
+        const speedFactor = Math.min(canvas.width, canvas.height) / 500;
+        const sizeFactor = Math.min(canvas.width, canvas.height) / 8; // Increased size factor
+
+        const dvdLogo = {
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            width: sizeFactor, // Adjust width based on screen size
+            height: sizeFactor / 2, // Maintain aspect ratio
+            dx: 2 * speedFactor, // Adjust speed based on screen size
+            dy: 2 * speedFactor,
+            color: getRandomColor()
+        };
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function drawLogo() {
+            ctx.fillStyle = dvdLogo.color;
+            ctx.fillRect(dvdLogo.x, dvdLogo.y, dvdLogo.width, dvdLogo.height);
+
+            ctx.fillStyle = 'white';
+            ctx.font = `${Math.floor(dvdLogo.height / 2)}px Arial`; // Adjust font size based on logo height
+            ctx.fillText('DVD', dvdLogo.x + dvdLogo.width / 4, dvdLogo.y + dvdLogo.height / 1.5);
+        }
+
+        function updateLogoPosition() {
+            dvdLogo.x += dvdLogo.dx;
+            dvdLogo.y += dvdLogo.dy;
+
+            // Bounce off walls
+            if (dvdLogo.x + dvdLogo.width > canvas.width || dvdLogo.x < 0) {
+                dvdLogo.dx *= -1;
+                dvdLogo.color = getRandomColor(); // Change color on bounce
+            }
+            if (dvdLogo.y + dvdLogo.height > canvas.height || dvdLogo.y < 0) {
+                dvdLogo.dy *= -1;
+                dvdLogo.color = getRandomColor(); // Change color on bounce
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateLogoPosition();
+            drawLogo();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
