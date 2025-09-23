@@ -23,7 +23,7 @@
     (function next() {
       setTimeout(() => {
         const img = new Image();
-        img.src = `./images/image${(current = (current + 1) % 36) + 1}.jpg`;
+        img.src = `./images/image${(current = (current + 1) % 40) + 1}.jpg`;
         img.onload = () => {
           document.getElementById('image').src = img.src;
           next()
