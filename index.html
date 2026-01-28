@@ -20,16 +20,28 @@
   <img id="image" src="./images/image1.jpg">
   <script>
     let current = 0;
+    const updateImage = () => {
+      const img = new Image();
+      img.src = `./images/image${current + 1}.jpg`;
+      img.onload = () => {
+        document.getElementById('image').src = img.src;
+      };
+    };
+
     (function next() {
       setTimeout(() => {
-        const img = new Image();
-        img.src = `./images/image${(current = (current + 1) % 40) + 1}.jpg`;
-        img.onload = () => {
-          document.getElementById('image').src = img.src;
-          next()
-        };
-      }, 5000)
-    })()
+        current = (current + 1) % 40;
+        updateImage();
+        next();
+      }, 5000);
+    })();
+
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') {
+        current = (current + 1) % 40;
+        updateImage();
+      }
+    });
   </script>
 </body>
 </html>
